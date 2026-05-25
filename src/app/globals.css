@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design tokens ─────────────────────────────────────────── */
+:root {
+  --color-primary:     #1e6fff;
+  --color-success:     #00c97a;
+  --color-danger:      #ff3d5a;
+  --color-warning:     #ffa629;
+  --color-surface:     #f9fafb;
+  --safe-bottom:       env(safe-area-inset-bottom, 0px);
+}
+
+/* ─── Base ──────────────────────────────────────────────────── */
+html { font-size: 16px; }            /* prevent iOS zoom on inputs */
+body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+* { box-sizing: border-box; }
+
+/* ─── Form inputs ────────────────────────────────────────────── */
+@layer components {
+  .input {
+    @apply w-full border border-gray-200 rounded-xl px-3 py-2.5
+           text-base font-normal text-gray-900 bg-white outline-none
+           focus:border-blue-500 focus:ring-2 focus:ring-blue-100
+           disabled:bg-gray-50 disabled:text-gray-400
+           min-h-[44px];           /* WCAG touch target */
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Buttons */
+  .btn-base {
+    @apply inline-flex items-center justify-center gap-2
+           rounded-xl font-bold text-sm
+           min-h-[44px] px-4 py-2.5
+           disabled:opacity-50 disabled:cursor-not-allowed
+           transition-opacity active:opacity-80;
+  }
+  .btn-primary { @apply btn-base bg-blue-600 text-white; }
+  .btn-success { @apply btn-base bg-emerald-500 text-white; }
+  .btn-danger  { @apply btn-base bg-red-500 text-white; }
+  .btn-ghost   { @apply btn-base bg-transparent border border-gray-200 text-gray-600; }
+  .btn-light   { @apply btn-base bg-blue-50 text-blue-700; }
+
+  /* Cards */
+  .card { @apply bg-white rounded-2xl shadow-sm border border-gray-100; }
+
+  /* Page padding (accounts for bottom nav on mobile) */
+  .page-content {
+    @apply px-4 pt-4 pb-[calc(72px+var(--safe-bottom))];
+  }
+
+  /* Bottom nav safe area */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50;
+    padding-bottom: var(--safe-bottom);
+  }
+}
+
+/* ─── Animations ─────────────────────────────────────────────── */
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.slide-up { animation: slide-up 0.22s ease-out; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.fade-in { animation: fade-in 0.18s ease; }
+
+/* ─── Print styles for payslip ──────────────────────────────── */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .print-slip { page-break-inside: avoid; }
+}
