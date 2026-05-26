@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Payroll Computation Engine (v4)
  * Handles daily / monthly / hourly payment types with proper proration.
  */
@@ -9,13 +9,13 @@ import { AppError } from '@/lib/errors'
 
 type DB = SupabaseClient<Database>
 
-// ─── Constants ────────────────────────────────────────────────
-export const SSO_CEILING        = 15_000   // บาท
-export const SSO_FLOOR          = 1_650    // บาท (ฐานขั้นต่ำ)
+// โ”€โ”€โ”€ Constants โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
+export const SSO_CEILING        = 15_000   // เธเธฒเธ—
+export const SSO_FLOOR          = 1_650    // เธเธฒเธ— (เธเธฒเธเธเธฑเนเธเธ•เนเธณ)
 export const DEFAULT_WORK_HRS   = 8
 export const DEFAULT_WORK_DAYS  = 26
 
-// ─── Compute effective rates per employee ─────────────────────
+// โ”€โ”€โ”€ Compute effective rates per employee โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export function computeEffectiveRates(employee: EmployeeExtended) {
   const stdDays = employee.standard_days_per_month || DEFAULT_WORK_DAYS
   const stdHrs  = employee.standard_hours_per_day  || DEFAULT_WORK_HRS
@@ -43,7 +43,7 @@ export function computeEffectiveRates(employee: EmployeeExtended) {
   return { daily, hourly, ot_multiplier: employee.ot_multiplier }
 }
 
-// ─── Compute suggested base amount by payment_type ────────────
+// โ”€โ”€โ”€ Compute suggested base amount by payment_type โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export function computeSuggestedBase(
   employee:       EmployeeExtended,
   hours:          { work_days: number; total_hours: number; ot_hours: number },
@@ -87,7 +87,7 @@ export function computeSuggestedBase(
   }
 }
 
-// ─── Final totals computation (pure) ─────────────────────────
+// โ”€โ”€โ”€ Final totals computation (pure) โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export function computePayrollTotals(input: {
   base_amount: number
   ot_amount:   number
@@ -100,7 +100,7 @@ export function computePayrollTotals(input: {
   const totDeduct  = input.deductions.reduce((s,d) => s + Number(d.amount||0), 0)
   const gross      = Number(input.base_amount) + Number(input.ot_amount) + totAllow
 
-  // SSO ฐาน 1,650 - 15,000
+  // SSO เธเธฒเธ 1,650 - 15,000
   const ssoBase    = Math.max(SSO_FLOOR, Math.min(gross, SSO_CEILING))
   const sso        = Math.round(ssoBase * (Number(input.sso_rate)/100))
   const tax        = Math.round(gross  * (Number(input.tax_rate)/100))
@@ -117,7 +117,7 @@ export function computePayrollTotals(input: {
   }
 }
 
-// ─── Fetch suggestion from DB (preferred — uses time logs) ────
+// โ”€โ”€โ”€ Fetch suggestion from DB (preferred โ€” uses time logs) โ”€โ”€โ”€โ”€
 export async function fetchPayrollSuggestion(
   db: DB,
   employee_id:    string,
@@ -135,7 +135,7 @@ export async function fetchPayrollSuggestion(
   return data as PayrollSuggestion
 }
 
-// ─── Re-export DB CRUD from old payroll repo ─────────────────
+// โ”€โ”€โ”€ Re-export DB CRUD from old payroll repo โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export {
   listPayrollByOrg,
   listPayrollByEmployee,
@@ -147,3 +147,4 @@ export {
   deletePayroll,
   getPayrollSummary,
 } from './payroll'
+
