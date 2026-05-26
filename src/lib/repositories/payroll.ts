@@ -1,5 +1,5 @@
-/**
- * Payroll Repository + Computation Engine — v3
+﻿/**
+ * Payroll Repository + Computation Engine โ€” v3
  * - Supports monthly / daily / hourly / piecework
  * - Range-based calculation with holiday premium pay
  * - Advance deduction integration
@@ -12,10 +12,10 @@ import { AppError } from '@/lib/errors'
 
 type DB = SupabaseClient<Database>
 
-// ─── Constants ────────────────────────────────────────────────
+// โ”€โ”€โ”€ Constants โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 const SSO_CEILING = 15_000
 
-// ─── Effective rates (snapshot at payroll creation) ──────────
+// โ”€โ”€โ”€ Effective rates (snapshot at payroll creation) โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export function computeEffectiveRates(employee: Employee & any) {
   const days_per_month = employee.standard_days_per_month ?? 26
   const hrs_per_day    = employee.standard_hours_per_day  ?? 8
@@ -31,7 +31,7 @@ export function computeEffectiveRates(employee: Employee & any) {
   }
 }
 
-// ─── Compute base/OT/holiday amounts from hours ──────────────
+// โ”€โ”€โ”€ Compute base/OT/holiday amounts from hours โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export type CompensationInput = {
   employee:        Employee & any
   pay_type:        PayType
@@ -54,7 +54,7 @@ export function computeCompensation(input: CompensationInput) {
   let base_amount = 0
 
   if (input.pay_type === 'monthly') {
-    // Monthly salary — prorate by actual days in period
+    // Monthly salary โ€” prorate by actual days in period
     const totalDays = daysBetween(input.period_from, input.period_to) + 1
     const month_salary = input.employee.base_salary
     // Subtract unpaid leave + absent days
@@ -65,7 +65,7 @@ export function computeCompensation(input: CompensationInput) {
   } else if (input.pay_type === 'hourly') {
     base_amount = Math.round(hourly * input.total_hours)
   } else {
-    // piecework — base = 0, all comp via allowances
+    // piecework โ€” base = 0, all comp via allowances
     base_amount = 0
   }
 
@@ -89,7 +89,7 @@ export function computeCompensation(input: CompensationInput) {
   }
 }
 
-// ─── Final totals (gross / sso / tax / net) ──────────────────
+// โ”€โ”€โ”€ Final totals (gross / sso / tax / net) โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export function computePayrollTotals(args: {
   base_amount:       number
   ot_amount:         number
@@ -127,7 +127,7 @@ export function computePayrollTotals(args: {
   }
 }
 
-// ─── DB calls ────────────────────────────────────────────────
+// โ”€โ”€โ”€ DB calls โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export async function fetchPayrollBreakdown(
   db: DB,
   employee_id: string,
@@ -143,7 +143,7 @@ export async function fetchPayrollBreakdown(
   return data as PayrollBreakdown
 }
 
-// ─── List & get ───────────────────────────────────────────────
+// โ”€โ”€โ”€ List & get โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export async function listPayrollByOrg(
   db: DB,
   org_id: string,
@@ -199,7 +199,7 @@ export async function getPayrollPeriod(db: DB, id: string): Promise<PayrollPerio
   return data
 }
 
-// ─── Create / update ──────────────────────────────────────────
+// โ”€โ”€โ”€ Create / update โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 export type CreatePayrollInput = Omit<PayrollPeriod,
   'id' | 'org_id' | 'created_at' | 'updated_at' | 'approved_by' | 'approved_at' | 'paid_by' | 'paid_at'>
 
@@ -223,7 +223,7 @@ export async function updatePayroll(
 ): Promise<PayrollPeriod> {
   const existing = await getPayrollPeriod(db, id)
   if (existing.status === 'paid')
-    throw new AppError('PAYROLL_LOCKED', 'สลิปที่จ่ายแล้วไม่สามารถแก้ไขได้', 403)
+    throw new AppError('PAYROLL_LOCKED', 'เธชเธฅเธดเธเธ—เธตเนเธเนเธฒเธขเนเธฅเนเธงเนเธกเนเธชเธฒเธกเธฒเธฃเธ–เนเธเนเนเธเนเธ”เน', 403)
 
   const { data, error } = await (db as any)
     .from('payroll_periods')
@@ -237,7 +237,7 @@ export async function updatePayroll(
 export async function approvePayroll(db: DB, id: string, approved_by: string): Promise<PayrollPeriod> {
   const existing = await getPayrollPeriod(db, id)
   if (existing.status !== 'draft')
-    throw new AppError('INVALID_STATUS', 'อนุมัติได้เฉพาะแบบร่างเท่านั้น', 400)
+    throw new AppError('INVALID_STATUS', 'เธญเธเธธเธกเธฑเธ•เธดเนเธ”เนเน€เธเธเธฒเธฐเนเธเธเธฃเนเธฒเธเน€เธ—เนเธฒเธเธฑเนเธ', 400)
 
   const { data, error } = await (db as any)
     .from('payroll_periods')
@@ -251,12 +251,12 @@ export async function approvePayroll(db: DB, id: string, approved_by: string): P
 export async function deletePayroll(db: DB, id: string): Promise<void> {
   const existing = await getPayrollPeriod(db, id)
   if (existing.status === 'paid')
-    throw new AppError('PAYROLL_LOCKED', 'ไม่สามารถลบสลิปที่จ่ายแล้ว', 403)
+    throw new AppError('PAYROLL_LOCKED', 'เนเธกเนเธชเธฒเธกเธฒเธฃเธ–เธฅเธเธชเธฅเธดเธเธ—เธตเนเธเนเธฒเธขเนเธฅเนเธง', 403)
   const { error } = await db.from('payroll_periods').delete().eq('id', id)
   if (error) throw new AppError('DELETE_PAYROLL_FAILED', error.message)
 }
 
-// ─── Helpers ──────────────────────────────────────────────────
+// โ”€โ”€โ”€ Helpers โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€โ”€
 function daysBetween(from: string, to: string): number {
   return Math.floor((new Date(to).getTime() - new Date(from).getTime()) / 86_400_000)
 }
@@ -281,9 +281,3 @@ export async function getPayrollSummary(db: DB, org_id: string) {
   return data ?? []
 }
 
-export async function getPayrollSummary(db: any, org_id: string) {
-  const { data, error } = await db.from('payroll_periods')
-    .select('status, net_amount').eq('org_id', org_id)
-  if (error) throw error
-  return data ?? []
-}
