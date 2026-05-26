@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { toast } from 'sonner'
@@ -10,10 +10,10 @@ import type { Holiday } from '@/types/enterprise'
 const fetcher = (url: string) => fetch(url).then(r => r.json()).then(j => j.data)
 
 const TYPE_LABEL = {
-  public:     { label: 'นักขัตฤกษ์', color: 'bg-red-100 text-red-700' },
-  company:    { label: 'บริษัท',    color: 'bg-blue-100 text-blue-700' },
-  religious:  { label: 'ศาสนา',     color: 'bg-purple-100 text-purple-700' },
-  substitute: { label: 'ชดเชย',     color: 'bg-amber-100 text-amber-700' },
+  public:     { label: 'เธเธฑเธเธเธฑเธ•เธคเธเธฉเน', color: 'bg-red-100 text-red-700' },
+  company:    { label: 'เธเธฃเธดเธฉเธฑเธ—',    color: 'bg-blue-100 text-blue-700' },
+  religious:  { label: 'เธจเธฒเธชเธเธฒ',     color: 'bg-purple-100 text-purple-700' },
+  substitute: { label: 'เธเธ”เน€เธเธข',     color: 'bg-amber-100 text-amber-700' },
 }
 
 export default function HolidaysPage() {
@@ -26,12 +26,12 @@ export default function HolidaysPage() {
   const past     = sorted.filter(h => new Date(h.date) < new Date())
 
   async function remove(id: string) {
-    if (!confirm('ลบวันหยุดนี้?')) return
+    if (!confirm('เธฅเธเธงเธฑเธเธซเธขเธธเธ”เธเธตเน?')) return
     try {
       const res  = await fetch(`/api/holidays/${id}`, { method: 'DELETE' })
       const json = await res.json()
       if (!json.ok) throw new Error(json.message)
-      toast.success('ลบแล้ว')
+      toast.success('เธฅเธเนเธฅเนเธง')
       mutate(`/api/holidays?year=${year}`)
     } catch (e: any) { toast.error(e.message) }
   }
@@ -40,14 +40,14 @@ export default function HolidaysPage() {
     <div>
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
-          <h1 className="text-2xl font-black">วันหยุดประจำปี</h1>
-          <p className="text-sm text-gray-500">ใช้คำนวณ OT พิเศษ + ลาวันหยุด</p>
+          <h1 className="text-2xl font-black">เธงเธฑเธเธซเธขเธธเธ”เธเธฃเธฐเธเธณเธเธต</h1>
+          <p className="text-sm text-gray-500">เนเธเนเธเธณเธเธงเธ“ OT เธเธดเน€เธจเธฉ + เธฅเธฒเธงเธฑเธเธซเธขเธธเธ”</p>
         </div>
         <div className="flex gap-2">
           <select value={year} onChange={e => setYear(Number(e.target.value))} className="input w-28">
             {[year - 1, year, year + 1].map(y => <option key={y} value={y}>{y + 543}</option>)}
           </select>
-          <button onClick={() => setShowForm(true)} className="btn-primary"><Plus size={18}/> เพิ่ม</button>
+          <button onClick={() => setShowForm(true)} className="btn-primary"><Plus size={18}/> เน€เธเธดเนเธก</button>
         </div>
       </div>
 
@@ -55,10 +55,10 @@ export default function HolidaysPage() {
       <div className="card p-4 mb-4">
         <div className="font-bold text-sm mb-3 flex items-center gap-2">
           <Calendar size={16} className="text-blue-600"/>
-          วันหยุดที่กำลังจะมาถึง ({upcoming.length})
+          เธงเธฑเธเธซเธขเธธเธ”เธ—เธตเนเธเธณเธฅเธฑเธเธเธฐเธกเธฒเธ–เธถเธ ({upcoming.length})
         </div>
         {upcoming.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-4">ไม่มีวันหยุดเหลือในปีนี้</p>
+          <p className="text-sm text-gray-400 text-center py-4">เนเธกเนเธกเธตเธงเธฑเธเธซเธขเธธเธ”เน€เธซเธฅเธทเธญเนเธเธเธตเธเธตเน</p>
         ) : (
           <div className="space-y-2">
             {upcoming.map(h => {
@@ -77,12 +77,12 @@ export default function HolidaysPage() {
                         {t.label}
                       </span>
                       {h.is_paid && (
-                        <span className="text-[10px] text-green-700">💰 หยุดมีค่าจ้าง</span>
+                        <span className="text-[10px] text-green-700">๐’ฐ เธซเธขเธธเธ”เธกเธตเธเนเธฒเธเนเธฒเธ</span>
                       )}
                     </div>
                   </div>
                   <span className="text-xs text-gray-500 shrink-0">
-                    {daysUntil === 0 ? 'วันนี้' : daysUntil === 1 ? 'พรุ่งนี้' : `อีก ${daysUntil} วัน`}
+                    {daysUntil === 0 ? 'เธงเธฑเธเธเธตเน' : daysUntil === 1 ? 'เธเธฃเธธเนเธเธเธตเน' : `เธญเธตเธ ${daysUntil} เธงเธฑเธ`}
                   </span>
                   <button onClick={() => remove(h.id)} className="text-gray-400 hover:text-red-500 p-1">
                     <Trash2 size={14}/>
@@ -98,7 +98,7 @@ export default function HolidaysPage() {
       {past.length > 0 && (
         <details className="card p-4">
           <summary className="font-bold text-sm cursor-pointer text-gray-600">
-            วันหยุดที่ผ่านมา ({past.length})
+            เธงเธฑเธเธซเธขเธธเธ”เธ—เธตเนเธเนเธฒเธเธกเธฒ ({past.length})
           </summary>
           <div className="space-y-1 mt-3 opacity-60">
             {past.reverse().map(h => (
@@ -129,7 +129,7 @@ function HolidayForm({ onSuccess, onClose }: { onSuccess: () => void; onClose: (
   const [saving, setSaving] = useState(false)
 
   async function save() {
-    if (!date || !name.trim()) return toast.error('กรอกข้อมูลให้ครบ')
+    if (!date || !name.trim()) return toast.error('เธเธฃเธญเธเธเนเธญเธกเธนเธฅเนเธซเนเธเธฃเธ')
     setSaving(true)
     try {
       const res  = await fetch('/api/holidays', {
@@ -139,7 +139,7 @@ function HolidayForm({ onSuccess, onClose }: { onSuccess: () => void; onClose: (
       })
       const json = await res.json()
       if (!json.ok) throw new Error(json.message)
-      toast.success('เพิ่มวันหยุดแล้ว')
+      toast.success('เน€เธเธดเนเธกเธงเธฑเธเธซเธขเธธเธ”เนเธฅเนเธง')
       onSuccess()
     } catch (e: any) { toast.error(e.message) }
     finally { setSaving(false) }
@@ -149,21 +149,21 @@ function HolidayForm({ onSuccess, onClose }: { onSuccess: () => void; onClose: (
     <div className="fixed inset-0 z-50 bg-black/60 flex items-end" onClick={onClose}>
       <div className="w-full max-w-md mx-auto bg-white rounded-t-3xl" onClick={e => e.stopPropagation()}>
         <div className="px-4 py-3 border-b flex items-center justify-between">
-          <h2 className="font-black">เพิ่มวันหยุด</h2>
+          <h2 className="font-black">เน€เธเธดเนเธกเธงเธฑเธเธซเธขเธธเธ”</h2>
           <button onClick={onClose}><X size={20}/></button>
         </div>
         <div className="p-4 space-y-3">
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1">วันที่ *</label>
+            <label className="block text-xs font-bold text-gray-700 mb-1">เธงเธฑเธเธ—เธตเน *</label>
             <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input"/>
           </div>
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-1">ชื่อวันหยุด *</label>
+            <label className="block text-xs font-bold text-gray-700 mb-1">เธเธทเนเธญเธงเธฑเธเธซเธขเธธเธ” *</label>
             <input value={name} onChange={e => setName(e.target.value)} className="input"
-              placeholder="เช่น วันสงกรานต์"/>
+              placeholder="เน€เธเนเธ เธงเธฑเธเธชเธเธเธฃเธฒเธเธ•เน"/>
           </div>
           <div>
-            <label className="block text-xs font-bold text-gray-700 mb-2">ประเภท</label>
+            <label className="block text-xs font-bold text-gray-700 mb-2">เธเธฃเธฐเน€เธ เธ—</label>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(TYPE_LABEL).map(([k, v]) => (
                 <label key={k} className={`flex items-center gap-2 p-2 rounded-xl border-2 cursor-pointer ${
@@ -179,13 +179,13 @@ function HolidayForm({ onSuccess, onClose }: { onSuccess: () => void; onClose: (
           <label className="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer
             ${isPaid ? 'border-green-400 bg-green-50' : 'border-gray-200'}">
             <input type="checkbox" checked={isPaid} onChange={e => setIsPaid(e.target.checked)} className="w-5 h-5"/>
-            <span className="text-sm font-bold">หยุดมีค่าจ้าง</span>
+            <span className="text-sm font-bold">เธซเธขเธธเธ”เธกเธตเธเนเธฒเธเนเธฒเธ</span>
           </label>
         </div>
         <div className="px-4 py-3 border-t flex gap-2">
-          <button onClick={onClose} className="flex-1 btn-ghost">ยกเลิก</button>
+          <button onClick={onClose} className="flex-1 btn-ghost">เธขเธเน€เธฅเธดเธ</button>
           <button onClick={save} disabled={saving} className="flex-[2] btn-primary">
-            {saving ? <Loader2 className="animate-spin" size={16}/> : '💾'} บันทึก
+            {saving ? <Loader2 className="animate-spin" size={16}/> : '๐’พ'} เธเธฑเธเธ—เธถเธ
           </button>
         </div>
       </div>
