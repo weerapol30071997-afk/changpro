@@ -62,7 +62,7 @@ export default function HolidaysPage() {
         ) : (
           <div className="space-y-2">
             {upcoming.map(h => {
-              const t = TYPE_LABEL[h.type as keyof typeof TYPE_LABEL] ?? TYPE_LABEL.public
+              const t = TYPE_LABEL[(h as any).type as keyof typeof TYPE_LABEL] ?? TYPE_LABEL.public
               const daysUntil = Math.ceil((new Date(h.date).getTime() - Date.now()) / 86400000)
               return (
                 <div key={h.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">

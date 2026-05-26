@@ -260,3 +260,23 @@ export async function deletePayroll(db: DB, id: string): Promise<void> {
 function daysBetween(from: string, to: string): number {
   return Math.floor((new Date(to).getTime() - new Date(from).getTime()) / 86_400_000)
 }
+
+export async function markPayrollPaid(db: DB, id: string, paid_by: string): Promise<PayrollPeriod> {
+  const { data, error } = await db
+    .from('payroll_periods')
+    .update({ status: 'paid', paid_by, paid_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function getPayrollSummary(db: DB, org_id: string) {
+  const { data, error } = await db
+    .from('payroll_periods')
+    .select('status, net_amount')
+    .eq('org_id', org_id)
+  if (error) throw error
+  return data ?? []
+}
