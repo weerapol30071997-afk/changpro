@@ -154,6 +154,7 @@ export async function markPayrollPaid(db: any, id: string, paid_by: string) {
   if (error) throw error
   return data
 }
+
 export async function getPayrollSummary(db: any, org_id: string) {
   const { data, error } = await db.from('payroll_periods')
     .select('status, net_amount').eq('org_id', org_id)
