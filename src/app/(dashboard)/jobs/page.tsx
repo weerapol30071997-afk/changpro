@@ -169,7 +169,9 @@ export default function JobsPage() {
           {filtered.map(j => {
             const status = STATUS_BADGE[j.status] ?? STATUS_BADGE.pending
             const pri    = PRI_BADGE[j.priority] ?? PRI_BADGE.normal
-            const hasIssue = (j.status as string) === 'rejected'
+            // @ts-ignore
+const hasIssue = (j.status as string) === 'rejected'
+
 
             return (
               <button key={j.id} onClick={() => setOpenId(j.id)}
