@@ -281,14 +281,6 @@ export async function getPayrollSummary(db: DB, org_id: string) {
   return data ?? []
 }
 
-export async function markPayrollPaid(db: any, id: string, paid_by: string) {
-  const { data, error } = await db.from('payroll_periods')
-    .update({ status: 'paid', paid_by, paid_at: new Date().toISOString() })
-    .eq('id', id).select().single()
-  if (error) throw error
-  return data
-}
-
 export async function getPayrollSummary(db: any, org_id: string) {
   const { data, error } = await db.from('payroll_periods')
     .select('status, net_amount').eq('org_id', org_id)
