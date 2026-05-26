@@ -1,6 +1,6 @@
-/**
- * POST /api/payroll          — create payroll period
- * GET  /api/payroll?month=   — list by org + month
+﻿/**
+ * POST /api/payroll          โ€” create payroll period
+ * GET  /api/payroll?month=   โ€” list by org + month
  */
 import { type NextRequest } from 'next/server'
 import { z } from 'zod'
@@ -9,7 +9,7 @@ import {
   createPayroll,
   listPayrollByOrg,
   getPayrollSummary,
-} from '@/lib/repositories/payroll'
+} from '@/lib/repositories/payrollEngine'
 
 const CreateSchema = z.object({
   employee_id:   z.string().uuid(),
@@ -63,3 +63,4 @@ export async function POST(req: NextRequest) {
     return created(period)
   } catch (e) { return err(e) }
 }
+
