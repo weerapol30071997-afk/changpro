@@ -14,7 +14,7 @@ import {
   deletePayroll,
   approvePayroll,
   markPayrollPaid,
-} from '@/lib/repositories/payroll'
+} from '@/lib/repositories/payrollEngine'
 
 type Ctx = { params: { id: string } }
 
